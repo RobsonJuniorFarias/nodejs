@@ -40,7 +40,9 @@ const server = http.createServer ((req, res) => {
         
         
     if (method = 'GET' && url === '/users')
-    return res.end ('criaçãp de usuários')
+    return res
+    .setHeader ('content-type', 'aplication/json')
+    .end (JSON.strignify(users))
 
 
 
