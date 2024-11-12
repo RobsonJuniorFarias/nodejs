@@ -24,12 +24,21 @@ import http from 'node:http'
 
 // Cabeçalhos (Requisição/resposta) => Metadados
 
+const users = []
+
 const server = http.createServer ((req, res) => {
     const {method, url} = req
 
-    if (method = 'POST' && url === '/users')
+    if (method = 'POST' && url === '/users'){
+        users.push({
+            id: 1,
+            name: 'Robert Junior',
+            email: 'robertjunior@example.com',
+        })
+            }
         return res.end ('Listagem de usuários')
-
+        
+        
     if (method = 'GET' && url === '/users')
     return res.end ('criaçãp de usuários')
 
