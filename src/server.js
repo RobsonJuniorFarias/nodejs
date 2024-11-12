@@ -36,7 +36,7 @@ const server = http.createServer ((req, res) => {
             email: 'robertjunior@example.com',
         })
             }
-        return res.end ('Listagem de usuários')
+        return res.writehead(201).end ()
         
         
     if (method = 'GET' && url === '/users')
@@ -46,7 +46,7 @@ const server = http.createServer ((req, res) => {
 
 
 
-    return res.end ('Hello Ignite')
+    return res.writehead(401).end ()
 })
 
 server.listen(3333)
