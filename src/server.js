@@ -36,7 +36,7 @@ const server = http.createServer ((req, res) => {
             email: 'robertjunior@example.com',
         })
             }
-        return res.writehead(201).end ()
+        return res.writeHead(201).end();
         
         
     if (method = 'GET' && url === '/users')
