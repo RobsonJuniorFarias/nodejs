@@ -29,7 +29,7 @@ const users = []
 const server = http.createServer ((req, res) => {
     const {method, url} = req
 
-    if (method = 'POST' && url === '/users'){
+    if (method === 'POST' && url === '/users') {
         users.push({
             id: 1,
             name: 'Robert Junior',
