@@ -39,10 +39,9 @@ const server = http.createServer ((req, res) => {
         return res.writeHead(201).end();
         
         
-    if (method = 'GET' && url === '/users')
-    return res
-    .setHeader ('content-type', 'aplication/json')
-    .end (JSON.strignify(users))
+        if (method === 'GET' && url === '/users')
+    return res.setHeader('Content-Type', 'application/json');
+           res.end (JSON.strignify(users))
     
     return res.writehead(401).end ()
 })
