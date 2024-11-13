@@ -43,9 +43,7 @@ const server = http.createServer ((req, res) => {
     return res
     .setHeader ('content-type', 'aplication/json')
     .end (JSON.strignify(users))
-
-
-
+    
     return res.writehead(401).end ()
 })
 
