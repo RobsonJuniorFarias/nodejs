@@ -20,13 +20,13 @@ class OneToHundredStream extends Readable {
         }
       }
 
-  class InverseNumberStream extends Transform {
-    _transform (chunk, encording, callback) {
-      const transformed = Number(chunk.toString()) * -1
-      
-      callback (null, Buffer.from(String(transformed)))
-    }
-}
+    class InverseNumberStream extends Transform {
+      _transform (chunk, encording, callback) {
+        const transformed = Number(chunk.toString()) * -1
+        
+        callback (null, Buffer.from(String(transformed)))
+      }
+  }
 
   class MultiplyByToStream extends Writable {
     _write (chunk, encording, callback) {

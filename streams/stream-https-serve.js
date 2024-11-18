@@ -3,6 +3,7 @@ import { Transform } from 'node:stream'
 
 class InverseNumberStream extends Transform {
     _transform (chunk, encording, callback) {
+        
       const vapo = Number(chunk.toString()) * -1
 
       console.log (vapo)
