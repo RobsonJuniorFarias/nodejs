@@ -13,9 +13,7 @@ class InverseNumberStream extends Transform {
 }
 
 const server = http.createServer ((req, res ) => {
-    return res
-    .pipe (InverseNumberStream())
-    .pipe (res)
+??
 })
 
 server.listen (3334)
