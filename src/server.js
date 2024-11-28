@@ -1,4 +1,5 @@
 import http from 'node:http'
+import { json } from './middleeare/json.js'
 
 // - Criar usuários
 // - Listagem usuários
@@ -31,23 +32,12 @@ const users = []
 const server = http.createServer (async(req, res) => {
     const { method, url } = req
 
-    const buffers = []
-
-    for await (const chunk of req){
-      buffers.push(chunk)
-    }
-  
-try{
-    req.body = JSON.parse(Buffer.concat(buffers).toString())
-} catch{
-    req.body = null
-}
-
     console.log(req.body)
 
+    await json(req, res)
+
 if (method === 'GET' && url === '/users') {
-    return res
-        .setHeader('Content-type', 'application/json')
+        return res
         .end(JSON.stringify(users))
     }
         
