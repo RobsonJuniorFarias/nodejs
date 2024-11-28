@@ -1,5 +1,5 @@
 import http from 'node:http'
-import { json } from './middleeare/json.js'
+import { json } from './middleware/json.js'
 
 // - Criar usuários
 // - Listagem usuários
