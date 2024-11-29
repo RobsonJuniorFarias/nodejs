@@ -1,5 +1,6 @@
 import http from 'node:http'
 import { json } from './middleware/json.js'
+import { Database } from './middleware/database.js'
 
 // - Criar usuários
 // - Listagem usuários
@@ -28,7 +29,7 @@ import { json } from './middleware/json.js'
 // {} - objeto
 // [] - array
 
-const users = []
+const database = new Database
 
 const server = http.createServer (async(req, res) => {
     const { method, url } = req
@@ -36,20 +37,24 @@ const server = http.createServer (async(req, res) => {
     console.log(req.body)
 
     await json(req, res)
+    
 
 if (method === 'GET' && url === '/users') {
-        return res
-        .end(JSON.stringify(users))
+        const users = database.select('users')
+
+        return res.end(JSON.stringify(users))
     }
         
         if (method === 'POST' && url === '/users') {
         const { name, email } = req.body
 
-        users.push({
+        const user = {
             id: 1,
             name,
             email,
-        })
+        }
+
+        database.insert('users', user)
         
         return res.writeHead(201).end();
         }
