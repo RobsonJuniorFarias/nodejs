@@ -25,7 +25,8 @@ import { json } from './middleware/json.js'
 
 // Cabeçalhos (Requisição/resposta) => Metadados
 
-
+// {} - objeto
+// [] - array
 
 const users = []
 
