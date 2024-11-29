@@ -40,7 +40,7 @@ const server = http.createServer (async(req, res) => {
     
 
 if (method === 'GET' && url === '/users') {
-        const users = database.select('users')
+        const users = database.Select('users')
 
         return res.end(JSON.stringify(users))
     }
@@ -54,7 +54,7 @@ if (method === 'GET' && url === '/users') {
             email,
         }
 
-        database.insert('users', user)
+        Database.Insert('users', user)
         
         return res.writeHead(201).end();
         }
