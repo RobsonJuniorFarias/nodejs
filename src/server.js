@@ -1,6 +1,7 @@
 import http from 'node:http'
 import { json } from './middleware/json.js'
 import { Database } from './database.js'
+import { routes } from './routes.js'
 
 // - Criar usuários
 // - Listagem usuários
@@ -29,34 +30,19 @@ import { Database } from './database.js'
 // {} - objeto
 // [] - array
 
-const database = new Database()
-
 const server = http.createServer (async(req, res) => {
     const { method, url } = req
 
     await json(req, res)
+
+    const route = routes.find( route => {
+        return route.method === method && route.path === url
+    });
+
+    console.log(route);
     
-    if (method === 'GET' && url === '/users') {
-        const users = database.select('users')
+    return res.writeHead(401).end ();
 
-        return res.end(JSON.stringify(users))
-    }
-        
-    if (method === 'POST' && url === '/users') {
-        const { name, email } = req.body
-
-    const user = {
-            id: 1,
-            name,
-            email,
-        }
-
-        database.insert('users', user)
-        
-        return res.writeHead(201).end();
-        }
-
-        return res.writehead(401).end ()
-})
+});
 
 server.listen(3333)
