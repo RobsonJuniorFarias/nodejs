@@ -15,7 +15,7 @@ export const routes = [
         
     },
     {
-        mehtod: 'GET',
+        mehtod: 'POST',
         path: '/users',
         handler: (req, res) => {
             const { name, email } = req.body
