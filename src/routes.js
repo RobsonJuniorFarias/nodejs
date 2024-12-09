@@ -5,7 +5,7 @@ const database = new Database()
 
 export const routes = [
     {
-        mehtod: 'GET',
+        method: 'GET',
         path: '/users',
         handler: (req, res) => {
             const users = database.select('users')
