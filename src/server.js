@@ -13,6 +13,8 @@ const server = http.createServer (async(req, res) => {
         return route.method === method && route.path === url
     })
     
+    console.log(route)
+    
     if (route) {
         return route.handler(req, res)
     }
