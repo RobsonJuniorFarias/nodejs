@@ -1,5 +1,5 @@
-import { randomUUID } from 'node:crypto'
 import { Database } from "./database.js"
+import { randomUUID } from 'node:crypto'
 
 const database = new Database()
 
@@ -10,12 +10,11 @@ export const routes = [
         handler: (req, res) => {
             const users = database.select('users')
 
-            return res.end(JSON.stringify(users))
+            return res.end(JSON.stringify(users))  
         }
-        
     },
     {
-        mehtod: 'POST',
+        method: 'POST',
         path: '/users',
         handler: (req, res) => {
             const { name, email } = req.body
@@ -29,7 +28,6 @@ export const routes = [
                 database.insert('users', user)
                 
                 return res.writeHead(201).end();
-
         }
-    },
+    }
 ]
