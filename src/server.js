@@ -1,25 +1,23 @@
-import http from 'node:http'
-import { json } from './middleware/json.js'
-import { routes } from './routes.js'
+import http from "node:http";
+import { json } from "./middleware/json.js";
+import { routes } from "./routes.js";
 
+const server = http.createServer(async (req, res) => {
+  const { method, url } = req;
 
+  await json(req, res);
 
-const server = http.createServer (async(req, res) => {
-    const { method, url } = req
+  const route = routes.find((route) => {
+    return route.method === method && route.path === url;
+  });
 
-    await json(req, res)
+  console.log(route);
 
-    const route = routes.find(route => {
-        return route.method === method && route.path === url
-    })
-    
-    console.log(route)
-    
-    if (route) {
-        return route.handler(req, res)
-    }
+  if (route) {
+    return route.handler(req, res);
+  }
 
-    return res.writeHead(404).end ()
-})
+  return res.writeHead(404).end();
+});
 
-server.listen(3333)
+server.listen(3333);
