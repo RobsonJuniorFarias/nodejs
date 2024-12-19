@@ -4,8 +4,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "project": "node --watch src/challenge/serves.js",
     "dev": "node --watch src/server.js"
   },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",
