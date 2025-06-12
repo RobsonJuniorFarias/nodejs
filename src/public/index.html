@@ -3,17 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Gerenciador de Usuários</title>
+  <title>Sistema de Vendas - Gerenciador</title>
   <style>
-    /* Reset básico */
-    * {
-      box-sizing: border-box;
-    }
+    /* Reset e básico */
+    * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
+      margin: 0; padding: 20px;
+      background: #f0f2f5;
       color: #333;
     }
     h1 {
@@ -21,64 +18,79 @@
       margin-bottom: 20px;
       color: #222;
     }
-    form {
-      max-width: 500px;
-      margin: 0 auto 30px auto;
+
+    /* Abas */
+    .tabs {
       display: flex;
-      gap: 15px;
-      background: #fff;
-      padding: 15px 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
     }
-    form input {
-      flex: 1;
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 1rem;
-      transition: border-color 0.2s;
-    }
-    form input:focus {
-      border-color: #007bff;
-      outline: none;
-    }
-    form button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 0 18px;
+    .tab {
+      padding: 10px 20px;
+      background: #ddd;
+      border-radius: 6px 6px 0 0;
       cursor: pointer;
       font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    .tab.active {
+      background: #007bff;
+      color: white;
+    }
+
+    /* Container das abas */
+    .tab-content {
+      background: white;
+      padding: 20px;
+      border-radius: 0 6px 6px 6px;
+      max-width: 900px;
+      margin: 0 auto;
+      box-shadow: 0 4px 15px rgb(0 0 0 / 0.1);
+    }
+
+    /* Formulário */
+    form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    form input, form select {
+      flex: 1;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    form button {
+      background: #007bff;
+      border: none;
+      color: white;
+      font-weight: 600;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
       transition: background-color 0.3s;
     }
     form button:hover {
-      background-color: #0056b3;
+      background: #0056b3;
     }
+
+    /* Tabela */
     table {
       width: 100%;
       border-collapse: collapse;
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     th, td {
-      padding: 12px 15px;
+      padding: 12px;
       border-bottom: 1px solid #eee;
       text-align: left;
       font-size: 0.95rem;
     }
     th {
-      background-color: #007bff;
+      background: #007bff;
       color: white;
-      font-weight: 600;
-    }
-    tr:last-child td {
-      border-bottom: none;
     }
     input.edit-input {
       width: 90%;
@@ -111,13 +123,15 @@
       background-color: #bd2130;
     }
     .message {
-      max-width: 900px;
-      margin: 10px auto;
       padding: 10px 15px;
       border-radius: 5px;
       text-align: center;
       font-weight: 600;
+      margin-bottom: 20px;
       display: none;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
     }
     .message.success {
       background-color: #d4edda;
@@ -127,60 +141,101 @@
       background-color: #f8d7da;
       color: #721c24;
     }
-    @media (max-width: 600px) {
-      form {
-        flex-direction: column;
-      }
-      form button {
-        width: 100%;
-      }
-      table, th, td {
-        font-size: 0.85rem;
-      }
-    }
   </style>
 </head>
 <body>
 
-  <h1>Gerenciador de Usuários</h1>
+  <h1>Sistema de Vendas - Gerenciador</h1>
 
-  <form id="user-form">
-    <input type="text" id="name" placeholder="Nome" required />
-    <input type="email" id="email" placeholder="E-mail" required />
-    <button type="submit">Cadastrar</button>
-  </form>
+  <div class="tabs">
+    <div class="tab active" data-tab="users">Usuários</div>
+    <div class="tab" data-tab="products">Produtos</div>
+    <div class="tab" data-tab="orders">Pedidos</div>
+  </div>
 
-  <div id="message" class="message"></div>
+  <div class="message" id="message"></div>
 
-  <table>
-    <thead>
-      <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
-    </thead>
-    <tbody id="user-list"></tbody>
-  </table>
+  <!-- Usuários -->
+  <section id="users" class="tab-content">
+    <form id="form-users">
+      <input type="text" id="user-name" placeholder="Nome" required />
+      <input type="email" id="user-email" placeholder="Email" required />
+      <button type="submit">Cadastrar Usuário</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
+      </thead>
+      <tbody id="list-users"></tbody>
+    </table>
+  </section>
+
+  <!-- Produtos -->
+  <section id="products" class="tab-content" style="display:none">
+    <form id="form-products">
+      <input type="text" id="product-name" placeholder="Nome do Produto" required />
+      <input type="number" id="product-price" placeholder="Preço" min="0" step="0.01" required />
+      <button type="submit">Cadastrar Produto</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Nome</th><th>Preço</th><th>Ações</th></tr>
+      </thead>
+      <tbody id="list-products"></tbody>
+    </table>
+  </section>
+
+  <!-- Pedidos -->
+  <section id="orders" class="tab-content" style="display:none">
+    <form id="form-orders">
+      <select id="order-user" required><option value="">Selecione Usuário</option></select>
+      <select id="order-product" required><option value="">Selecione Produto</option></select>
+      <input type="number" id="order-quantity" placeholder="Quantidade" min="1" required />
+      <button type="submit">Criar Pedido</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Usuário</th><th>Produto</th><th>Quantidade</th><th>Total</th><th>Ações</th></tr>
+      </thead>
+      <tbody id="list-orders"></tbody>
+    </table>
+  </section>
 
   <script>
-    const form = document.getElementById("user-form");
-    const userList = document.getElementById("user-list");
+    // Mensagem
     const messageDiv = document.getElementById("message");
-
-    // Mostrar mensagem temporária
     function showMessage(text, type = 'success') {
       messageDiv.textContent = text;
       messageDiv.className = 'message ' + type;
       messageDiv.style.display = 'block';
-      setTimeout(() => {
-        messageDiv.style.display = 'none';
-      }, 3000);
+      setTimeout(() => messageDiv.style.display = 'none', 3500);
     }
 
-    // Buscar todos usuários
+    // Abas
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        contents.forEach(c => c.style.display = "none");
+        document.getElementById(tab.dataset.tab).style.display = "block";
+        if(tab.dataset.tab === 'orders') {
+          loadOrderSelects();
+        }
+      });
+    });
+
+    // ------------------- USUÁRIOS -------------------
+
+    const userList = document.getElementById("list-users");
+    const userForm = document.getElementById("form-users");
+
     async function fetchUsers() {
       try {
         const res = await fetch("/users");
-        if (!res.ok) throw new Error("Falha ao carregar usuários");
+        if (!res.ok) throw new Error("Erro ao buscar usuários");
         const users = await res.json();
-
         userList.innerHTML = "";
         users.forEach(user => {
           const tr = document.createElement("tr");
@@ -199,16 +254,11 @@
       }
     }
 
-    // Criar usuário
-    form.addEventListener("submit", async e => {
+    userForm.addEventListener("submit", async e => {
       e.preventDefault();
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-
-      if (!name || !email) {
-        showMessage("Preencha todos os campos", "error");
-        return;
-      }
+      const name = document.getElementById("user-name").value.trim();
+      const email = document.getElementById("user-email").value.trim();
+      if (!name || !email) return showMessage("Preencha nome e email", "error");
 
       try {
         const res = await fetch("/users", {
@@ -216,23 +266,23 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email }),
         });
-        if (!res.ok) throw new Error("Erro ao cadastrar usuário");
-        showMessage("Usuário cadastrado com sucesso!");
-        form.reset();
+        if (!res.ok) throw new Error("Erro ao criar usuário");
+        showMessage("Usuário criado!");
+        userForm.reset();
         fetchUsers();
       } catch (err) {
         showMessage(err.message, "error");
       }
     });
 
-    // Delegação de eventos para botões Salvar e Excluir
     userList.addEventListener("click", async e => {
       const target = e.target;
+      if (!target.dataset.id) return;
+
       const id = target.dataset.id;
 
       if (target.classList.contains("delete-btn")) {
-        // Excluir usuário
-        if (confirm("Confirma exclusão deste usuário?")) {
+        if (confirm("Deseja excluir este usuário?")) {
           try {
             const res = await fetch(`/users/${id}`, { method: "DELETE" });
             if (!res.ok) throw new Error("Erro ao excluir usuário");
@@ -242,24 +292,22 @@
             showMessage(err.message, "error");
           }
         }
-      } else if (target.classList.contains("save-btn")) {
-        // Salvar (atualizar) usuário
+      }
+
+      if (target.classList.contains("save-btn")) {
         const tr = target.closest("tr");
         const nameInput = tr.querySelector('input[data-field="name"]');
         const emailInput = tr.querySelector('input[data-field="email"]');
-        const updatedName = nameInput.value.trim();
-        const updatedEmail = emailInput.value.trim();
 
-        if (!updatedName || !updatedEmail) {
-          showMessage("Preencha os campos para atualizar", "error");
-          return;
-        }
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        if (!name || !email) return showMessage("Preencha nome e email", "error");
 
         try {
           const res = await fetch(`/users/${id}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: updatedName, email: updatedEmail }),
+            body: JSON.stringify({ name, email }),
           });
           if (!res.ok) throw new Error("Erro ao atualizar usuário");
           showMessage("Usuário atualizado!");
@@ -270,8 +318,223 @@
       }
     });
 
-    // Carregar lista ao abrir
     fetchUsers();
+
+    // ------------------- PRODUTOS -------------------
+
+    const productList = document.getElementById("list-products");
+    const productForm = document.getElementById("form-products");
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch("/products");
+        if (!res.ok) throw new Error("Erro ao buscar produtos");
+        const products = await res.json();
+        productList.innerHTML = "";
+        products.forEach(product => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><input type="text" class="edit-input" value="${product.name}" data-id="${product.id}" data-field="name"></td>
+            <td><input type="number" class="edit-input" value="${product.price}" data-id="${product.id}" data-field="price" step="0.01" min="0"></td>
+            <td>
+              <button class="action-btn save-btn" data-id="${product.id}">Salvar</button>
+              <button class="action-btn delete-btn" data-id="${product.id}">Excluir</button>
+            </td>
+          `;
+          productList.appendChild(tr);
+        });
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    }
+
+    productForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const name = document.getElementById("product-name").value.trim();
+      const price = parseFloat(document.getElementById("product-price").value);
+      if (!name || isNaN(price)) return showMessage("Preencha nome e preço válidos", "error");
+
+      try {
+        const res = await fetch("/products", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, price }),
+        });
+        if (!res.ok) throw new Error("Erro ao criar produto");
+        showMessage("Produto criado!");
+        productForm.reset();
+        fetchProducts();
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    });
+
+    productList.addEventListener("click", async e => {
+      const target = e.target;
+      if (!target.dataset.id) return;
+
+      const id = target.dataset.id;
+
+      if (target.classList.contains("delete-btn")) {
+        if (confirm("Deseja excluir este produto?")) {
+          try {
+            const res = await fetch(`/products/${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Erro ao excluir produto");
+            showMessage("Produto excluído!");
+            fetchProducts();
+          } catch (err) {
+            showMessage(err.message, "error");
+          }
+        }
+      }
+
+      if (target.classList.contains("save-btn")) {
+        const tr = target.closest("tr");
+        const nameInput = tr.querySelector('input[data-field="name"]');
+        const priceInput = tr.querySelector('input[data-field="price"]');
+
+        const name = nameInput.value.trim();
+        const price = parseFloat(priceInput.value);
+        if (!name || isNaN(price)) return showMessage("Preencha nome e preço válidos", "error");
+
+        try {
+          const res = await fetch(`/products/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, price }),
+          });
+          if (!res.ok) throw new Error("Erro ao atualizar produto");
+          showMessage("Produto atualizado!");
+          fetchProducts();
+        } catch (err) {
+          showMessage(err.message, "error");
+        }
+      }
+    });
+
+    fetchProducts();
+
+    // ------------------- PEDIDOS -------------------
+
+    const orderList = document.getElementById("list-orders");
+    const orderForm = document.getElementById("form-orders");
+    const orderUserSelect = document.getElementById("order-user");
+    const orderProductSelect = document.getElementById("order-product");
+
+    async function loadOrderSelects() {
+      try {
+        const usersRes = await fetch("/users");
+        const users = await usersRes.json();
+        orderUserSelect.innerHTML = '<option value="">Selecione Usuário</option>';
+        users.forEach(user => {
+          orderUserSelect.innerHTML += `<option value="${user.id}">${user.name}</option>`;
+        });
+
+        const productsRes = await fetch("/products");
+        const products = await productsRes.json();
+        orderProductSelect.innerHTML = '<option value="">Selecione Produto</option>';
+        products.forEach(product => {
+          orderProductSelect.innerHTML += `<option value="${product.id}">${product.name}</option>`;
+        });
+
+        fetchOrders();
+      } catch (err) {
+        showMessage("Erro ao carregar usuários ou produtos para pedidos", "error");
+      }
+    }
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch("/orders");
+        if (!res.ok) throw new Error("Erro ao buscar pedidos");
+        const orders = await res.json();
+        orderList.innerHTML = "";
+        orders.forEach(order => {
+          const total = (order.product.price * order.quantity).toFixed(2);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${order.user.name}</td>
+            <td>${order.product.name}</td>
+            <td><input type="number" class="edit-input" data-id="${order.id}" data-field="quantity" value="${order.quantity}" min="1"></td>
+            <td>R$ ${total}</td>
+            <td>
+              <button class="action-btn save-btn" data-id="${order.id}">Salvar</button>
+              <button class="action-btn delete-btn" data-id="${order.id}">Excluir</button>
+            </td>
+          `;
+          orderList.appendChild(tr);
+        });
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    }
+
+    orderForm.addEventListener("submit", async e => {
+      e.preventDefault();
+
+      const userId = orderUserSelect.value;
+      const productId = orderProductSelect.value;
+      const quantity = parseInt(document.getElementById("order-quantity").value);
+
+      if (!userId || !productId || isNaN(quantity) || quantity < 1) {
+        return showMessage("Preencha todos os campos corretamente", "error");
+      }
+
+      try {
+        const res = await fetch("/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, productId, quantity }),
+        });
+        if (!res.ok) throw new Error("Erro ao criar pedido");
+        showMessage("Pedido criado!");
+        orderForm.reset();
+        loadOrderSelects();
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    });
+
+    orderList.addEventListener("click", async e => {
+      const target = e.target;
+      if (!target.dataset.id) return;
+
+      const id = target.dataset.id;
+
+      if (target.classList.contains("delete-btn")) {
+        if (confirm("Deseja excluir este pedido?")) {
+          try {
+            const res = await fetch(`/orders/${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Erro ao excluir pedido");
+            showMessage("Pedido excluído!");
+            loadOrderSelects();
+          } catch (err) {
+            showMessage(err.message, "error");
+          }
+        }
+      }
+
+      if (target.classList.contains("save-btn")) {
+        const tr = target.closest("tr");
+        const quantityInput = tr.querySelector('input[data-field="quantity"]');
+        const quantity = parseInt(quantityInput.value);
+
+        if (isNaN(quantity) || quantity < 1) return showMessage("Quantidade inválida", "error");
+
+        try {
+          const res = await fetch(`/orders/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ quantity }),
+          });
+          if (!res.ok) throw new Error("Erro ao atualizar pedido");
+          showMessage("Pedido atualizado!");
+          loadOrderSelects();
+        } catch (err) {
+          showMessage(err.message, "error");
+        }
+      }
+    });
   </script>
 </body>
 </html>
