@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gerenciador de Usuários</title>
+  <style>
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #222;
+    }
+    form {
+      max-width: 500px;
+      margin: 0 auto 30px auto;
+      display: flex;
+      gap: 15px;
+      background: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    form input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    form input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    form button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 0 18px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+    form button:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    th {
+      background-color: #007bff;
+      color: white;
+      font-weight: 600;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    input.edit-input {
+      width: 90%;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button.action-btn {
+      margin-right: 8px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button.save-btn {
+      background-color: #28a745;
+      color: white;
+    }
+    button.save-btn:hover {
+      background-color: #1e7e34;
+    }
+    button.delete-btn {
+      background-color: #dc3545;
+      color: white;
+    }
+    button.delete-btn:hover {
+      background-color: #bd2130;
+    }
+    .message {
+      max-width: 900px;
+      margin: 10px auto;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-align: center;
+      font-weight: 600;
+      display: none;
+    }
+    .message.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    @media (max-width: 600px) {
+      form {
+        flex-direction: column;
+      }
+      form button {
+        width: 100%;
+      }
+      table, th, td {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Gerenciador de Usuários</h1>
+
+  <form id="user-form">
+    <input type="text" id="name" placeholder="Nome" required />
+    <input type="email" id="email" placeholder="E-mail" required />
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <div id="message" class="message"></div>
+
+  <table>
+    <thead>
+      <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
+    </thead>
+    <tbody id="user-list"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById("user-form");
+    const userList = document.getElementById("user-list");
+    const messageDiv = document.getElementById("message");
+
+    // Mostrar mensagem temporária
+    function showMessage(text, type = 'success') {
+      messageDiv.textContent = text;
+      messageDiv.className = 'message ' + type;
+      messageDiv.style.display = 'block';
+      setTimeout(() => {
+        messageDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // Buscar todos usuários
+    async function fetchUsers() {
+      try {
+        const res = await fetch("/users");
+        if (!res.ok) throw new Error("Falha ao carregar usuários");
+        const users = await res.json();
+
+        userList.innerHTML = "";
+        users.forEach(user => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td><input type="text" class="edit-input" value="${user.name}" data-id="${user.id}" data-field="name"></td>
+            <td><input type="email" class="edit-input" value="${user.email}" data-id="${user.id}" data-field="email"></td>
+            <td>
+              <button class="action-btn save-btn" data-id="${user.id}">Salvar</button>
+              <button class="action-btn delete-btn" data-id="${user.id}">Excluir</button>
+            </td>
+          `;
+          userList.appendChild(tr);
+        });
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    }
+
+    // Criar usuário
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+
+      if (!name || !email) {
+        showMessage("Preencha todos os campos", "error");
+        return;
+      }
+
+      try {
+        const res = await fetch("/users", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email }),
+        });
+        if (!res.ok) throw new Error("Erro ao cadastrar usuário");
+        showMessage("Usuário cadastrado com sucesso!");
+        form.reset();
+        fetchUsers();
+      } catch (err) {
+        showMessage(err.message, "error");
+      }
+    });
+
+    // Delegação de eventos para botões Salvar e Excluir
+    userList.addEventListener("click", async e => {
+      const target = e.target;
+      const id = target.dataset.id;
+
+      if (target.classList.contains("delete-btn")) {
+        // Excluir usuário
+        if (confirm("Confirma exclusão deste usuário?")) {
+          try {
+            const res = await fetch(`/users/${id}`, { method: "DELETE" });
+            if (!res.ok) throw new Error("Erro ao excluir usuário");
+            showMessage("Usuário excluído!");
+            fetchUsers();
+          } catch (err) {
+            showMessage(err.message, "error");
+          }
+        }
+      } else if (target.classList.contains("save-btn")) {
+        // Salvar (atualizar) usuário
+        const tr = target.closest("tr");
+        const nameInput = tr.querySelector('input[data-field="name"]');
+        const emailInput = tr.querySelector('input[data-field="email"]');
+        const updatedName = nameInput.value.trim();
+        const updatedEmail = emailInput.value.trim();
+
+        if (!updatedName || !updatedEmail) {
+          showMessage("Preencha os campos para atualizar", "error");
+          return;
+        }
+
+        try {
+          const res = await fetch(`/users/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: updatedName, email: updatedEmail }),
+          });
+          if (!res.ok) throw new Error("Erro ao atualizar usuário");
+          showMessage("Usuário atualizado!");
+          fetchUsers();
+        } catch (err) {
+          showMessage(err.message, "error");
+        }
+      }
+    });
+
+    // Carregar lista ao abrir
+    fetchUsers();
+  </script>
+</body>
+</html>
