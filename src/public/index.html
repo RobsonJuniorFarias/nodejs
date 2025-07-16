@@ -4,164 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sistema de Vendas - Gerenciador</title>
-  <style>
-    /* ... estilos mantidos como antes ... */
-  </style>
 </head>
 <body>
-
   <h1>Sistema de Vendas - Gerenciador</h1>
 
-  <div class="tabs">
-    <div class="tab active" data-tab="users">Usuários</div>
-    <div class="tab" data-tab="products">Produtos</div>
-    <div class="tab" data-tab="orders">Pedidos</div>
-  </div>
+  <nav>
+    <button onclick="showTab('users')">Usuários</button>
+    <button onclick="showTab('products')">Produtos</button>
+    <button onclick="showTab('orders')">Pedidos</button>
+  </nav>
 
-  <div class="message" id="message"></div>
-
-  <!-- Usuários -->
-  <section id="users" class="tab-content">
-    <form id="form-users">
+  <section id="users" style="display:block">
+    <h2>Usuários</h2>
+    <form id="user-form">
       <input type="text" id="user-name" placeholder="Nome" required />
       <input type="email" id="user-email" placeholder="Email" required />
-      <button type="submit">Cadastrar Usuário</button>
+      <button type="submit">Adicionar Usuário</button>
     </form>
-    <table>
-      <thead>
-        <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
-      </thead>
-      <tbody id="list-users"></tbody>
-    </table>
+    <ul id="user-list"></ul>
   </section>
 
-  <!-- Produtos -->
-  <section id="products" class="tab-content" style="display:none">
-    <form id="form-products">
-      <input type="text" id="product-name" placeholder="Nome do Produto" required />
-      <input type="number" id="product-price" placeholder="Preço" min="0" step="0.01" required />
-      <button type="submit">Cadastrar Produto</button>
+  <section id="products" style="display:none">
+    <h2>Produtos</h2>
+    <form id="product-form">
+      <input type="text" id="product-name" placeholder="Produto" required />
+      <input type="number" id="product-price" placeholder="Preço" required />
+      <button type="submit">Adicionar Produto</button>
     </form>
-    <table>
-      <thead>
-        <tr><th>Nome</th><th>Preço</th><th>Ações</th></tr>
-      </thead>
-      <tbody id="list-products"></tbody>
-    </table>
+    <ul id="product-list"></ul>
   </section>
 
-  <!-- Pedidos -->
-  <section id="orders" class="tab-content" style="display:none">
-    <form id="form-orders">
-      <select id="order-user" required><option value="">Selecione Usuário</option></select>
-      <select id="order-product" required><option value="">Selecione Produto</option></select>
-      <input type="number" id="order-quantity" placeholder="Quantidade" min="1" required />
+  <section id="orders" style="display:none">
+    <h2>Pedidos</h2>
+    <form id="order-form">
+      <select id="order-user"></select>
+      <select id="order-product"></select>
+      <input type="number" id="order-quantity" placeholder="Quantidade" required />
       <button type="submit">Criar Pedido</button>
     </form>
-    <table>
-      <thead>
-        <tr><th>Usuário</th><th>Produto</th><th>Quantidade</th><th>Total</th><th>Ações</th></tr>
-      </thead>
-      <tbody id="list-orders"></tbody>
-    </table>
+    <ul id="order-list"></ul>
   </section>
 
   <script>
-    // Função de exibição de mensagens
-    const messageDiv = document.getElementById("message");
-    function showMessage(text, type = 'success') {
-      messageDiv.textContent = text;
-      messageDiv.className = 'message ' + type;
-      messageDiv.style.display = 'block';
-      setTimeout(() => messageDiv.style.display = 'none', 3500);
+    const tabs = ['users', 'products', 'orders'];
+
+    function showTab(tab) {
+      tabs.forEach(t => {
+        document.getElementById(t).style.display = t === tab ? 'block' : 'none';
+      });
     }
 
-    // Abas
-    const tabs = document.querySelectorAll(".tab");
-    const contents = document.querySelectorAll(".tab-content");
-    tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        contents.forEach(c => c.style.display = "none");
-        document.getElementById(tab.dataset.tab).style.display = "block";
-        if (tab.dataset.tab === 'orders') {
-          loadOrderSelects();
-        }
-      });
-    });
-
-    // Código JS para usuários, produtos e pedidos
-    // (mantenha os mesmos blocos de código para fetchUsers, fetchProducts, fetchOrders)
-
-    // Finalização do form de pedidos
-    orderForm.addEventListener("submit", async e => {
-      e.preventDefault();
-      const userId = orderUserSelect.value;
-      const productId = orderProductSelect.value;
-      const quantity = parseInt(document.getElementById("order-quantity").value);
-
-      if (!userId || !productId || isNaN(quantity) || quantity <= 0) {
-        return showMessage("Preencha todos os campos do pedido", "error");
-      }
-
-      try {
-        const res = await fetch("/orders", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, productId, quantity })
-        });
-        if (!res.ok) throw new Error("Erro ao criar pedido");
-        showMessage("Pedido criado!");
-        orderForm.reset();
-        fetchOrders();
-      } catch (err) {
-        showMessage(err.message, "error");
-      }
-    });
-
-    orderList.addEventListener("click", async e => {
-      const target = e.target;
-      if (!target.dataset.id) return;
-
-      const id = target.dataset.id;
-
-      if (target.classList.contains("delete-btn")) {
-        if (confirm("Deseja excluir este pedido?")) {
-          try {
-            const res = await fetch(`/orders/${id}`, { method: "DELETE" });
-            if (!res.ok) throw new Error("Erro ao excluir pedido");
-            showMessage("Pedido excluído!");
-            fetchOrders();
-          } catch (err) {
-            showMessage(err.message, "error");
-          }
-        }
-      }
-
-      if (target.classList.contains("save-btn")) {
-        const tr = target.closest("tr");
-        const quantityInput = tr.querySelector('input[data-field="quantity"]');
-        const quantity = parseInt(quantityInput.value);
-
-        if (isNaN(quantity) || quantity <= 0) {
-          return showMessage("Quantidade inválida", "error");
-        }
-
-        try {
-          const res = await fetch(`/orders/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ quantity })
-          });
-          if (!res.ok) throw new Error("Erro ao atualizar pedido");
-          showMessage("Pedido atualizado!");
-          fetchOrders();
-        } catch (err) {
-          showMessage(err.message, "error");
-        }
-      }
-    });
+    // Você pode adaptar o JavaScript conforme os endpoints da sua API
   </script>
 </body>
 </html>
