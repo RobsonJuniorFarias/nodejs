@@ -1,11 +1,5 @@
 {
-  "users": [
-    {
-      "id": "02a3f21a-dfff-4914-834c-2f49409c78d2",
-      "name": "fgcgc",
-      "email": "fariasjuniorrobson@gmail.com"
-    }
-  ],
+  "users": [],
   "products": [
     {
       "id": "b2c43ab6-2bb5-4d37-90c8-d16920caac3f",
@@ -31,6 +25,11 @@
       "id": "ca1a5ae7-3860-4833-8f83-67efb32aa23b",
       "name": "Pão",
       "price": 0.04
+    },
+    {
+      "id": "ca874e42-d88e-4b80-b831-ff5e85aa5eda",
+      "name": "Teste",
+      "price": 0.01
     }
   ]
 }
