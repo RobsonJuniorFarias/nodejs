@@ -10,12 +10,10 @@ export const routes = [
     path: BuildRoutePath("/users"),
     handler: (req, res) => {
       const { search } = req.query;
-
       const users = database.select("users", search ? {
         name: search,
         email: search
       } : null);
-
       return res.end(JSON.stringify(users));
     },
   },
@@ -24,15 +22,8 @@ export const routes = [
     path: BuildRoutePath("/users"),
     handler: (req, res) => {
       const { name, email } = req.body;
-
-      const user = {
-        id: randomUUID(),
-        name,
-        email,
-      };
-
+      const user = { id: randomUUID(), name, email };
       database.insert("users", user);
-
       return res.writeHead(201).end();
     },
   },
@@ -42,12 +33,7 @@ export const routes = [
     handler: (req, res) => {
       const { id } = req.params;
       const { name, email } = req.body;
-
-      database.update('users', id, {
-        name,
-        email,
-      });
-
+      database.update('users', id, { name, email });
       return res.writeHead(204).end();
     }
   },
@@ -56,11 +42,52 @@ export const routes = [
     path: BuildRoutePath('/users/:id'),
     handler: (req, res) => {
       const { id } = req.params;
-
       database.delete('users', id);
-
       return res.writeHead(204).end();
     },
+  },
+  {
+    method: "GET",
+    path: BuildRoutePath("/products"),
+    handler: (req, res) => {
+      const products = database.select("products") ?? [];
+      res.writeHead(200, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify(products));
+    }
+  },
+  {
+    method: "POST",
+    path: BuildRoutePath("/products"),
+    handler: (req, res) => {
+      const { name, price } = req.body;
+      if (!name || !price) {
+        res.writeHead(400, { "Content-Type": "application/json" });
+        return res.end(JSON.stringify({ error: "Nome e preço são obrigatórios" }));
+      }
+      const product = { id: randomUUID(), name, price };
+      database.insert("products", product);
+      res.writeHead(201, { "Content-Type": "application/json" });
+      return res.end(JSON.stringify(product));
+    }
+  },
+  {
+    method: "PUT",
+    path: BuildRoutePath("/products/:id"),
+    handler: (req, res) => {
+      const { id } = req.params;
+      const { name, price } = req.body;
+      database.update("products", id, { name, price });
+      return res.writeHead(204).end();
+    }
+  },
+  {
+    method: "DELETE",
+    path: BuildRoutePath("/products/:id"),
+    handler: (req, res) => {
+      const { id } = req.params;
+      database.delete("products", id);
+      return res.writeHead(204).end();
+    }
   },
   {
     method: "GET",
@@ -73,38 +100,11 @@ export const routes = [
       const ordersWithDetails = orders.map(order => {
         const user = users.find(u => u.id === order.userId);
         const product = products.find(p => p.id === order.productId);
-        return {
-          ...order,
-          user,
-          product,
-        };
+        return { ...order, user, product };
       });
 
       res.writeHead(200, { "Content-Type": "application/json" });
       return res.end(JSON.stringify(ordersWithDetails));
-    }
-  },
-  {
-    method: "POST",
-    path: BuildRoutePath("/products"),
-    handler: (req, res) => {
-      const { name, price } = req.body;
-
-      if (!name || !price) {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        return res.end(JSON.stringify({ error: "Nome e preço são obrigatórios" }));
-      }
-
-      const product = {
-        id: randomUUID(),
-        name,
-        price,
-      };
-
-      database.insert("products", product);
-
-      res.writeHead(201, { "Content-Type": "application/json" });
-      return res.end(JSON.stringify(product));
     }
   }
 ];

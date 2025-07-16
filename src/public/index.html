@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Painel Administrativo</title>
   <style>
     body {
@@ -12,21 +12,17 @@
       display: flex;
       height: 100vh;
     }
-
-    /* Menu lateral */
     aside {
       width: 220px;
       background-color: #1e1e2f;
       color: white;
       padding: 20px;
     }
-
     aside h2 {
       margin-top: 0;
       font-size: 20px;
       text-align: center;
     }
-
     aside nav a {
       display: block;
       margin: 15px 0;
@@ -36,17 +32,14 @@
       border-radius: 6px;
       transition: background 0.2s;
     }
-
     aside nav a:hover {
       background-color: #2d2d4f;
     }
-
     main {
       flex: 1;
       padding: 30px;
       overflow-y: auto;
     }
-
     section {
       margin-bottom: 50px;
       background-color: white;
@@ -54,49 +47,41 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-
     section h3 {
       margin-top: 0;
       color: #333;
     }
-
     form {
       margin-bottom: 15px;
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
-
     input, select, button {
       padding: 10px;
       font-size: 1rem;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
-
     button {
       background-color: #007bff;
       color: white;
       border: none;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #0056b3;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-
     th, td {
       padding: 10px;
       border-bottom: 1px solid #ddd;
       text-align: left;
     }
-
     th {
       background-color: #007bff;
       color: white;
@@ -105,88 +90,198 @@
 </head>
 <body>
 
-  <aside>
-    <h2>Admin Panel</h2>
-    <nav>
-      <a href="#usuarios">👤 Usuários</a>
-      <a href="#produtos">📦 Produtos</a>
-      <a href="#pedidos">📝 Pedidos</a>
-    </nav>
-  </aside>
+<aside>
+  <h2>Admin Panel</h2>
+  <nav>
+    <a href="#usuarios">👤 Usuários</a>
+    <a href="#produtos">📦 Produtos</a>
+  </nav>
+</aside>
 
-  <main>
-    <!-- Usuários -->
-    <section id="usuarios">
-      <h3>Gerenciar Usuários</h3>
-      <form>
-        <input type="text" placeholder="Nome" required>
-        <input type="email" placeholder="Email" required>
-        <button type="submit">Cadastrar</button>
-      </form>
-      <table>
-        <thead>
-          <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Maria Silva</td>
-            <td>maria@email.com</td>
-            <td><button>Editar</button> <button>Excluir</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+<main>
+  <!-- Usuários -->
+  <section id="usuarios">
+    <h3>Gerenciar Usuários</h3>
+    <form>
+      <input type="text" placeholder="Nome" required />
+      <input type="email" placeholder="Email" required />
+      <button type="submit">Cadastrar</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Nome</th><th>Email</th><th>Ações</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
 
-    <!-- Produtos -->
-    <section id="produtos">
-      <h3>Gerenciar Produtos</h3>
-      <form>
-        <input type="text" placeholder="Produto" required>
-        <input type="number" placeholder="Preço" min="0" step="0.01" required>
-        <button type="submit">Cadastrar</button>
-      </form>
-      <table>
-        <thead>
-          <tr><th>Produto</th><th>Preço</th><th>Ações</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Camiseta Azul</td>
-            <td>R$ 39,90</td>
-            <td><button>Editar</button> <button>Excluir</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+  <!-- Produtos -->
+  <section id="produtos">
+    <h3>Gerenciar Produtos</h3>
+    <form>
+      <input type="text" placeholder="Produto" required />
+      <input type="number" placeholder="Preço" min="0" step="0.01" required />
+      <button type="submit">Cadastrar</button>
+    </form>
+    <table>
+      <thead>
+        <tr><th>Produto</th><th>Preço</th><th>Ações</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</main>
 
-    <!-- Pedidos -->
-    <section id="pedidos">
-      <h3>Gerenciar Pedidos</h3>
-      <form>
-        <select required>
-          <option value="">Selecione o usuário</option>
-        </select>
-        <select required>
-          <option value="">Selecione o produto</option>
-        </select>
-        <input type="number" placeholder="Quantidade" min="1" required>
-        <button type="submit">Criar Pedido</button>
-      </form>
-      <table>
-        <thead>
-          <tr><th>Usuário</th><th>Produto</th><th>Quantidade</th><th>Ações</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>João</td>
-            <td>Boné</td>
-            <td>2</td>
-            <td><button>Editar</button> <button>Excluir</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  </main>
+<script>
+  const apiUrl = 'http://localhost:3333';
+
+  const userForm = document.querySelector('#usuarios form');
+  const userTableBody = document.querySelector('#usuarios tbody');
+
+  const productForm = document.querySelector('#produtos form');
+  const productTableBody = document.querySelector('#produtos tbody');
+
+  function createUserRow(user) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" value="${user.name}" /></td>
+      <td><input type="email" value="${user.email}" /></td>
+      <td>
+        <button onclick="updateUser('${user.id}', this)">Salvar</button>
+        <button onclick="deleteUser('${user.id}')">Excluir</button>
+      </td>
+    `;
+    return tr;
+  }
+
+  function createProductRow(product) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" value="${product.name}" /></td>
+      <td><input type="number" value="${product.price}" step="0.01" /></td>
+      <td>
+        <button onclick="updateProduct('${product.id}', this)">Salvar</button>
+        <button onclick="deleteProduct('${product.id}')">Excluir</button>
+      </td>
+    `;
+    return tr;
+  }
+
+  async function loadUsers() {
+    const res = await fetch(`${apiUrl}/users`);
+    const users = await res.json();
+    userTableBody.innerHTML = '';
+    users.forEach(user => {
+      userTableBody.appendChild(createUserRow(user));
+    });
+  }
+
+  async function loadProducts() {
+    const res = await fetch(`${apiUrl}/products`);
+    const products = await res.json();
+    productTableBody.innerHTML = '';
+    products.forEach(product => {
+      productTableBody.appendChild(createProductRow(product));
+    });
+  }
+
+  userForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = userForm.querySelector('input[type="text"]').value.trim();
+    const email = userForm.querySelector('input[type="email"]').value.trim();
+    if (!name || !email) return alert('Preencha nome e email');
+    const res = await fetch(`${apiUrl}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    });
+    if (res.ok) {
+      userForm.reset();
+      loadUsers();
+    } else {
+      alert('Erro ao cadastrar usuário');
+    }
+  });
+
+  productForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = productForm.querySelector('input[type="text"]').value.trim();
+    const priceStr = productForm.querySelector('input[type="number"]').value.trim();
+    const price = parseFloat(priceStr);
+    if (!name || isNaN(price) || price < 0) return alert('Informe nome e preço válidos');
+    const res = await fetch(`${apiUrl}/products`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, price })
+    });
+    if (res.ok) {
+      productForm.reset();
+      loadProducts();
+    } else {
+      alert('Erro ao cadastrar produto');
+    }
+  });
+
+  async function updateUser(id, btn) {
+    const tr = btn.closest('tr');
+    const name = tr.querySelector('input[type="text"]').value.trim();
+    const email = tr.querySelector('input[type="email"]').value.trim();
+    if (!name || !email) return alert('Nome e email obrigatórios');
+    const res = await fetch(`${apiUrl}/users/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email })
+    });
+    if (res.ok) {
+      alert('Usuário atualizado!');
+      loadUsers();
+    } else {
+      alert('Erro ao atualizar usuário');
+    }
+  }
+
+  async function deleteUser(id) {
+    if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
+    const res = await fetch(`${apiUrl}/users/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      loadUsers();
+    } else {
+      alert('Erro ao excluir usuário');
+    }
+  }
+
+  async function updateProduct(id, btn) {
+    const tr = btn.closest('tr');
+    const name = tr.querySelector('input[type="text"]').value.trim();
+    const price = parseFloat(tr.querySelector('input[type="number"]').value.trim());
+    if (!name || isNaN(price)) return alert('Nome e preço obrigatórios');
+    const res = await fetch(`${apiUrl}/products/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, price })
+    });
+    if (res.ok) {
+      alert('Produto atualizado!');
+      loadProducts();
+    } else {
+      alert('Erro ao atualizar produto');
+    }
+  }
+
+  async function deleteProduct(id) {
+    if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+    const res = await fetch(`${apiUrl}/products/${id}`, { method: 'DELETE' });
+    if (res.ok) {
+      loadProducts();
+    } else {
+      alert('Erro ao excluir produto');
+    }
+  }
+
+  // Inicializar dados
+  loadUsers();
+  loadProducts();
+</script>
 
 </body>
 </html>

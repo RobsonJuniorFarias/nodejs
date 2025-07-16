@@ -12,34 +12,45 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const server = http.createServer(async (req, res) => {
   const { method, url } = req;
 
-  // Servir index.html
-  if (method === "GET" && url === "/") {
-    const filePath = path.join(__dirname, "public", "index.html");
-    const html = await fs.readFile(filePath, "utf-8");
+  // Servir arquivo index.html da pasta public
+  if (method === "GET" && (url === "/" || url === "/index.html")) {
+    try {
+      const filePath = path.join(__dirname, "public", "index.html");
+      const html = await fs.readFile(filePath, "utf-8");
 
-    res.writeHead(200, { "Content-Type": "text/html" });
-    return res.end(html);
+      res.writeHead(200, { "Content-Type": "text/html" });
+      return res.end(html);
+    } catch {
+      res.writeHead(404).end("Arquivo não encontrado");
+      return;
+    }
   }
 
-  // Middleware JSON
+  // Middleware JSON para popular req.body
   await json(req, res);
 
-  const route = routes.find(route => {
-    return route.method === method && route.path.test(url);
-  });
+  // Encontrar rota correspondente
+  const route = routes.find(route => route.method === method && route.path.test(url));
 
   if (route) {
-    const routeParams = req.url.match(route.path);
+    // Extrair parâmetros da URL
+    const routeParams = url.match(route.path);
 
-    const { query, ...params } = routeParams.groups;
+    if (routeParams) {
+      const groups = route.path.exec(url).groups ?? {};
+      const { query, ...params } = groups;
 
-    req.params = params;
-    req.query = query ? extractQueryParams(query) : {};
+      req.params = params;
+      req.query = query ? extractQueryParams(query) : {};
+    } else {
+      req.params = {};
+      req.query = {};
+    }
 
     return route.handler(req, res);
   }
 
-  return res.writeHead(404).end();
+  res.writeHead(404).end("Rota não encontrada");
 });
 
 server.listen(3333, () => {
